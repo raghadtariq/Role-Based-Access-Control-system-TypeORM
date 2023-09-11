@@ -1,29 +1,25 @@
-import express from 'express';
-import userRouter from './routers/user.js';
-import "reflect-metadata";
+import express from "express";
+import usersrouter from './routers/user.js'; 
 
-import dataSource from "./db/dataSource.js";
-
-
-var app = express();
+const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+app.use('/users' , usersrouter );
 
+app.use((err: any, req: any, res: any, next: any) => {
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-app.get('/', (req, res) => {
-    res.send('Server Up!')
+  res.status(err.status || 500).send(err);
 });
 
-app.use('/users', userRouter);
-
-app.use((req, res) => {
-  res.status(404).send("Page does not exist :(");
+app.get("/", (req, res) => {
+  res.send("Server UP !");
 });
 
 app.listen(PORT, () => {
-    console.log(`App is listening on port ${PORT}`);
-  dataSource.initialize()
+  console.log(`App is listening on port ${PORT}`);
 });
-  
-  export default app;
+
+export default app;

@@ -1,42 +1,56 @@
-import { User } from '../db/entities/User.js';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import dataSource from '../db/dataSource.js';
 import express from 'express';
-const insertUser = (payload: User) => {
-    return dataSource.manager.transaction(async transaction => {
-      const newUser = User.create(payload);
-      await transaction.save(newUser);
+import { User } from '../db/entities/User.js';
+import { NSUser } from '../@types/user.js'; 
+import dataSource from '../db/dataSource.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
+
+const insertUser = (payload: NSUser.Item) => {
+  return dataSource.manager.transaction(async transaction => {
+    const newUser = User.create({
+      ...payload,
+    });
+    await transaction.save(newUser);
   });
 }
 
 const login = async (email: string, password: string) => {
-try {
+  try {
     const user = await User.findOneBy({
-    email
+      email
     });
 
     const passwordMatching = await bcrypt.compare(password, user?.password || '');
 
     if (user && passwordMatching) {
-    const token = jwt.sign(
+      const token = jwt.sign(
         {
-        email: user.email,
-        userName: user.username
+          email: user.email,
+          fullName: user.username
         },
         process.env.SECRET_KEY || '',
         {
-        expiresIn: "30m"
+          expiresIn: "30m"
         }
-    );
+      );
 
-    return token;
+      return token;
     } else {
-    throw ("Invalid Username or password!");
+      throw ("Invalid Username or password!");
     }
-} catch (error) {
+  } catch (error) {
     throw ("Invalid Username or password!");
-}
+  }
 }
 
-export { insertUser, login }
+
+const getUsers = () => {
+  return User.find();
+}
+
+export {
+  insertUser,
+  login,
+  getUsers
+}

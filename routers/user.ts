@@ -1,25 +1,41 @@
-import { User } from '../db/entities/User.js';
+import express from 'express';
+import { validateUser } from '../middleware/validation/user.js';
+import { authorize } from '../middleware/auth/authorize.js';
+import insertPermission  from '../controllers/permission.js'
+import {insertUser,getUsers,login} from '../controllers/user.js'
+import {insertRole,insertRolewithUser} from '../controllers/role.js'
+import { authenticate } from '../middleware/auth/authenticate.js';
 
-import { Profile } from '../db/entities/Profile.js';
-import { Permission } from '../db/entities/Permission.js';
-import { Role } from '../db/entities/Role.js';
-import { In } from 'typeorm';
+const router = express.Router();
 
-var router = express.Router();
-import express from "express";
-import { validateUser } from "../middleware/validation/user.js";
-import { insertUser, login } from "../controllers/user.js";
-
-var router = express.Router();
-
-router.post('/', validateUser, (req, res, next) => {
+router.post('/', authorize('POST_users'), validateUser, (req, res, next) => {
     insertUser(req.body).then(() => {
       res.status(201).send()
-    }).catch((err: any) => {
+    })
+  });
+
+  router.post('/role', authorize('POST_users/role'), authenticate, (req, res, next) => {
+    insertRole(req.body).then((data) => {
+      res.status(201).send(data)
+    }).catch(err => {
       console.error(err);
       res.status(500).send(err);
     });
   });
+  
+  router.post('/rolePermission', authorize('POST_users/role'), authenticate, (req, res, next) => {
+    insertRolewithUser(req.body)
+  });
+  
+  router.post('/permission', authenticate, (req, res, next) => {
+    insertPermission(req.body).then((data) => {
+      res.status(201).send(data)
+    }).catch(err => {
+      console.error(err);
+      res.status(500).send(err);
+    });
+  });
+
 
 router.post('/login', (req, res) => {
     const email = req.body.email;
@@ -33,9 +49,17 @@ router.post('/login', (req, res) => {
         })
 });
 
+router.get('/user', authorize('GET_users/role'), authenticate, async (req, res, next) => {
+    try {
+      const users = await getUsers();
+      res.send(users);
+    } catch (error) {
+      res.status(500).send("Something went wrong");
+    }
+  });
+
 router.get('/', (req, res, next) => {
     res.send('respond with a resource');
 });
 
-export default router;
-
+  export default router;
