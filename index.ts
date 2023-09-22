@@ -1,11 +1,14 @@
 import express from "express";
 import usersrouter from './routers/user.js'; 
+import { authenticate } from './middleware/auth/authenticate.js';
+import dataSource,  { initDB } from "./db/dataSource.js";
+import logger from 'morgan';
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
-app.use('/users' , usersrouter );
+app.use('/users' , authenticate, usersrouter );
 
 app.use((err: any, req: any, res: any, next: any) => {
   res.locals.message = err.message;
