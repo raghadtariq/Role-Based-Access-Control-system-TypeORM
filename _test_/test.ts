@@ -11,7 +11,7 @@ describe('User Controller', () => {
   });
 
   const tmpData = {
-    "email": "batool@email.com",
+    "email": "raghadd@email.com",
     "password": "123456"
   };
 
