@@ -1,15 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, ManyToMany, BaseEntity, JoinColumn, JoinTable } from "typeorm";
-import { Profile } from './Profile.js';
-import { Role } from './Role.js';
-
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Role } from "./Role.js";
+import { Profile } from "./Profile.js";
 
 @Entity()
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ length: 50, nullable: false })
-  username: string;
+  userName: string;
 
   @Column({ nullable: false })
   password: string;
@@ -17,13 +16,17 @@ export class User extends BaseEntity {
   @Column({ nullable: false })
   email: string;
 
-  @OneToOne(() => Profile, { cascade: true, eager: true })
+  @OneToOne(()=> Profile, { cascade: true, eager: true })
   @JoinColumn()
   profile: Profile;
 
-  @ManyToMany(() => Role, { cascade: true, eager: true })
+  @ManyToMany(() => Role, { cascade: true, onDelete:"CASCADE", onUpdate:"CASCADE"})
   @JoinTable()
-  roles: Role[];
+  role: Role[];
 
-  
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => "CURRENT_TIMESTAMP(0)"
+  })
+  createdAt: Date;
 }

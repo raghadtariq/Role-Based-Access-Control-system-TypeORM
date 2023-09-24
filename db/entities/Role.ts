@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, BaseEntity } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToMany, JoinTable, BaseEntity} from 'typeorm';
 import { User } from './User.js';
 import { Permission } from './Permission.js';
 
@@ -19,9 +19,6 @@ export class Role extends BaseEntity {
   @JoinTable()
   permissions: Permission[];
 
-
-  @ManyToMany(() => User, user => user.roles)
-  users: User[];
-
-  
+  @ManyToMany(() => User, user => user.role)
+  users: User[]; 
 }

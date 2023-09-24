@@ -1,21 +1,24 @@
-import express from 'express';
-import { NSUser } from '../../@types/user.js';
+import  express from "express";
+import jwt from "jsonwebtoken";
+import { NextFunction } from "express";
 
-const authorize = (api: string) => {
-  return (
+const authorie = (
     req: express.Request,
     res: express.Response,
-    next: express.NextFunction
-  ) => {
-    const permissions: NSUser.Permission[] = res.locals.user?.role?.permissions || [];
-    if (permissions.filter(p => p.name === api).length > 0) {
-      next();
-    } else {
-      res.status(403).send("You don't have the permission to access this resource!");
+    next : NextFunction
+) => {
+    const token = req.headers['authorization'] || '';
+    let tokenIsValid ; 
+    try {
+        tokenIsValid = jwt.verify(token, process.env.SECRET_KEY || '');
+    }catch(error){}
+    if(tokenIsValid){
+        const decode = jwt.decode(token);
+        res.locals.user = decode;
+        next();
+    }else{
+        res.status(401).send(' You are unauthorized');
     }
-  }
 }
 
-export {
-  authorize
-}
+export {authorie};

@@ -1,7 +1,5 @@
-import express from 'express';
-import { Permission } from '../db/entities/Permission.js';
-import { NSUser } from '../@types/user.js';
-
+import { Permission } from "../db/entities/Permission.js";
+import { NSUser } from "../@types/user.js";
 
 const insertPermission = async (payload: NSUser.Permission) => {
   try {
@@ -16,4 +14,4 @@ const insertPermission = async (payload: NSUser.Permission) => {
   }
 }
 
-export default insertPermission ;
+export default insertPermission;

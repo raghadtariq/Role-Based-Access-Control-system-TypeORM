@@ -4,7 +4,7 @@ const validateUser = (req: express.Request,
   res: express.Response,
   next: express.NextFunction
 ) => {
-  const values = ['fullName', 'email', 'password', 'type'];
+  const values = ['userName', 'email', 'password', 'type'];
   const user = req.body;
   const errorList = [];
   values.forEach(key => {
@@ -17,7 +17,7 @@ const validateUser = (req: express.Request,
     errorList.push('Password should contain at least 6 characters!');
   }
 
-  if (!['employee', 'employer'].includes(user.type)) {
+  if (!['Pending', 'Accepted', 'Rejected'].includes(user.type)) {
     errorList.push('User type unknown!');
   }
 
@@ -28,8 +28,6 @@ const validateUser = (req: express.Request,
   }
 }
 
-
-
 export {
-  validateUser
+    validateUser
 }

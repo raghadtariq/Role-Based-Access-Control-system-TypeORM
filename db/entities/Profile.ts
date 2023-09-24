@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn, EntitySchema, Relation, BaseEntity } from 'typeorm';
-
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Profile extends BaseEntity {
@@ -12,6 +11,7 @@ export class Profile extends BaseEntity {
   @Column({ nullable: false })
   lastName: string;
 
-  @Column({ nullable: false, type: 'date' })
-  dateOfBirth: Date;
+  @Column({ type: 'date', nullable: false })
+  dateOfBirth: Date;
+
 }

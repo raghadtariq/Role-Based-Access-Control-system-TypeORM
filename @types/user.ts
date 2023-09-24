@@ -1,33 +1,34 @@
-import { Role } from "../db/entities/Role.js";
 
 export namespace NSUser {
- 
-    export enum Type {
-      admin = 'admin',
-      user = 'user',
-      editor = 'editor',
-    }
-  
-    export interface Item {
-      id: number;
-      userName: string;
-      email: string;
-      password: string;
-      type: Type;
-      createdAt: Date;
-      firstName? : string;
-      lastName?: string;
-      dateOfBirth?: Date;
-    }
-  
-    export interface Role {
-      id: number;
-      name: string;
-      permissions: number[];
-    }
-    
-    export interface Permission {
-      id: number;
-      name: string;
-    }
+  export enum Type {
+    Admin = 'Admin', 
+    User = 'User', 
+    Editor = 'Editor'
   }
+
+  export interface Item {
+    id: number;
+    userName: string;
+    email: string;
+    password: string;
+    type: Type;
+    createdAt: Date;
+  }
+ 
+  export interface Role {
+    id: number;
+    name: "Admin" | "User" | "Editor";
+    permissions: number[];
+    type: 'enum'; 
+    enum: ['Admin', 'User', 'Editor'];
+    default: 'User';
+  }
+  
+  export interface Permission {
+    id: number;
+    name: 'create_post' |'edit_user' | 'delete_comment' | 'view_post';
+    type: 'enum', 
+    enum: ['create_post', 'edit_user', 'delete_comment', 'view_post'];
+
+  }
+}

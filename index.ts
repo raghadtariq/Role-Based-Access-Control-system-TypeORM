@@ -1,19 +1,28 @@
+import './config.js';
 import express from "express";
-import usersrouter from './routers/user.js'; 
+import cors from 'cors';
+
+import dataSource from "./db/dataSource.js";
+import usersRouter from './routers/userrouter.js';
+import permissionrouter from './routers/permissionrouter.js';
+import rolerouter from './routers/rolerouter.js'
 import { authenticate } from './middleware/auth/authenticate.js';
-import dataSource,  { initDB } from "./db/dataSource.js";
-import logger from 'morgan';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+app.use(cors({
+  origin: "http://localhost:3000"
+}));
 
 app.use(express.json());
-app.use('/users' , authenticate, usersrouter );
+app.use('/users', authenticate, usersRouter);
+app.use('/roles' ,authenticate, rolerouter );
+app.use('/permissions' , authenticate, permissionrouter );
 
 app.use((err: any, req: any, res: any, next: any) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   res.status(err.status || 500).send(err);
 });
 
