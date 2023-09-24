@@ -4,7 +4,7 @@ import insertPermission from '../controllers/permission.js';
 
 const router = express.Router();
 
-router.post('/permission', authenticate, (req, res, next) => {
+router.post('/permission', (req, res, next) => {
     insertPermission(req.body).then((data) => {
       res.status(201).send(data)
     }).catch(err => {

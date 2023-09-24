@@ -16,9 +16,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
-app.use('/users', authenticate, usersRouter);
-app.use('/roles' ,authenticate, rolerouter );
-app.use('/permissions' , authenticate, permissionrouter );
+app.use('/users',  usersRouter);
+app.use('/roles' , rolerouter );
+app.use('/permissions' ,  permissionrouter );
 
 app.use((err: any, req: any, res: any, next: any) => {
   res.locals.message = err.message;

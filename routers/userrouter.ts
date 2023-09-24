@@ -30,7 +30,7 @@ router.post('/login', (req, res) => {
     }
 });
 
-router.get('/user', authenticate, async (req, res, next) => {
+router.get('/user', async (req, res, next) => {
   try {
     const users = await getUsers();
     res.send(users);
